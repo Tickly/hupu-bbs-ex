@@ -1,0 +1,19 @@
+{
+    "name": "hupu-replylist",
+    "version": "1.0.0",
+    "manifest_version": 2,
+
+    "description": "一款可以在电脑上方便查看帖子回复的插件。",
+    "permissions": [
+        "https://bbs.mobileapi.hupu.com/"
+    ],
+    "content_scripts": [{
+        "matches": [
+            "*://bbs.hupu.com/*.html"
+        ],
+        "js": [
+            "main.js"
+        ],
+        "css": []
+    }]
+}
