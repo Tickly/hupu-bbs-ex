@@ -63,7 +63,7 @@
             lid
             :pid="info.pid"
             :href="`https://bbs.hupu.com/post.php?action=quote&amp;fid=34&amp;tid=${tid}&amp;pid=${info.pid}&amp;article=1`"
-            @click="close"
+            @click="closeAll"
           >引用</a>
           <a @click="show">查看回复({{num}})</a>
         </div>
@@ -82,7 +82,6 @@
   </div>
 </template>
 <script>
-import Dialog from './dialog'
 import $ from 'jquery'
 export default {
   props: {
@@ -121,10 +120,14 @@ export default {
     // 查看回复
     show() {
       if (this.num === 0) return;
-      Dialog.show(this.tid, this.info.pid);
+      this.$root.push(this.tid, this.info.pid);
     },
     close() {
       this.$emit('close');
+    },
+    closeAll() {
+      this.$root.dialogs = [];
+      // this.$emit('closeAll')
     }
   }
 }

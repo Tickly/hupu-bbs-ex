@@ -1,6 +1,7 @@
 import Api from './api'
 import $ from 'jquery'
-import Dialog from './dialog'
+import Dialogs from './dialogs.vue'
+import Vue from 'vue'
 
 
 window.addEventListener('load', function () {
@@ -10,6 +11,14 @@ window.addEventListener('load', function () {
     // 作者id
     let uid = $('#tpc .j_u').attr('uid');
     window.__uid = uid;
+
+
+    let div = document.createElement('div');
+    document.body.appendChild(div);
+
+    let vm = new Vue(Dialogs).$mount(div)
+
+
 
     Api.getsThreadLightReplyList(tid)
         // 处理接口返回数据
@@ -32,7 +41,7 @@ window.addEventListener('load', function () {
                 a.addEventListener('click', function () {
                     if (num === 0) return;
 
-                    Dialog.show(tid, pid);
+                    vm.push(tid, pid);
                 })
 
                 // 加进页面中

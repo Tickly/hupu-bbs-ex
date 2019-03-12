@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     close() {
-      this.visible = false;
+      this.$emit('close');
     }
   }
 }
