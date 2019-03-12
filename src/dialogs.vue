@@ -29,7 +29,19 @@ export default {
     handleClose(i) {
       this.dialogs.splice(i, 1);
     },
-
+  },
+  watch: {
+    'dialogs.length': function (len) {
+      let className = 'overflow-hidden'
+      if (len > 0) document.body.classList.add(className)
+      else document.body.classList.remove(className);
+    }
   }
 }
 </script>
+
+<style>
+.overflow-hidden {
+  overflow: hidden;
+}
+</style>
