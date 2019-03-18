@@ -1,19 +1,17 @@
 <template>
-  <div>
-    <div v-if="visible" class="showdiv">
-      <div class="pop">
-        <div class="pop_content">
-          <h2 class="mpop">
-            <a @click="close"></a>
-            查看回复
-          </h2>
+  <div class="showdiv" @click="close">
+    <div class="pop" @click.stop>
+      <div class="pop_content">
+        <h2 class="mpop">
+          <a @click="close"></a>
+          查看回复
+        </h2>
 
-          <ul>
-            <li v-for="reply in list" :key="reply.pid">
-              <floor :info="reply" :tid="tid" @close="close"/>
-            </li>
-          </ul>
-        </div>
+        <ul class="reply-list">
+          <li v-for="reply in list" :key="reply.pid">
+            <floor :info="reply" :tid="tid" @close="close" />
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -29,7 +27,6 @@ export default {
   data() {
     return {
       list: [],
-      visible: true,
     }
   },
   props: {
@@ -68,11 +65,15 @@ export default {
     position: relative;
   }
 
+  /deep/ .author {
+    padding-right: 10px;
+  }
+
   ul {
     position: absolute;
     top: 35px;
     bottom: 0;
-    // padding: 15px;
+    // padding: 0 15px;
     overflow: scroll;
   }
 }
