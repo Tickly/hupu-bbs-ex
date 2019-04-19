@@ -1,5 +1,5 @@
 <template>
-  <div class="showdiv" @click="close">
+  <div class="showdiv tg-dialog" @click="close">
     <div class="pop" @click.stop>
       <div class="pop_content">
         <h2 class="mpop">
@@ -24,7 +24,7 @@ export default {
   components: {
     Floor,
   },
-  data() {
+  data () {
     return {
       list: [],
     }
@@ -33,7 +33,7 @@ export default {
     tid: String,
     pid: String,
   },
-  created() {
+  created () {
     Api.getCheckReply(this.tid, this.pid)
       .then(data => data.data)
       .then(list => {
@@ -41,7 +41,7 @@ export default {
       })
   },
   methods: {
-    close() {
+    close () {
       this.$emit('close');
     }
   }
