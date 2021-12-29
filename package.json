@@ -1,5 +1,5 @@
 {
-  "name": "hupu-replylist",
+  "name": "hupu-view-reply",
   "version": "1.0.0",
   "description": "一款可以在电脑上方便查看帖子回复的插件。",
   "main": "src/index.js",
@@ -12,18 +12,20 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.3.4",
-    "axios": "^0.18.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.5",
     "css-loader": "^2.1.1",
-    "jquery": "^3.3.1",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "style-loader": "^0.23.1",
-    "vue": "^2.6.8",
     "vue-loader": "^15.7.0",
     "vue-template-compiler": "^2.6.8",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "jquery": "^3.6.0",
+    "vue": "^2.6.14"
   }
 }
