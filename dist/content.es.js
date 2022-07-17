@@ -16200,7 +16200,7 @@ const close = (pid) => {
   DialogProps.value.splice(index, 1);
 };
 var ReplyInfo_vue_vue_type_style_index_0_lang = "";
-const _hoisted_1$1 = { class: "reply-info d-flex align-items-start" };
+const _hoisted_1$2 = { class: "reply-info d-flex align-items-start" };
 const _hoisted_2$1 = ["src", "alt"];
 const _hoisted_3$1 = { class: "flex-grow-1 content-wrap" };
 const _hoisted_4$1 = { class: "user-name" };
@@ -16234,7 +16234,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
     return (_ctx, _cache) => {
       var _a;
-      return openBlock(), createElementBlock("div", _hoisted_1$1, [
+      return openBlock(), createElementBlock("div", _hoisted_1$2, [
         createBaseVNode("img", {
           class: "user-img",
           src: __props.ReplyInfo.userImg,
@@ -16258,7 +16258,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   }
 });
 var ReplyDialog_vue_vue_type_style_index_0_lang = "";
-const _hoisted_1 = { class: "modal-dialog modal-lg" };
+const _hoisted_1$1 = { class: "modal-dialog modal-lg" };
 const _hoisted_2 = { class: "modal-content" };
 const _hoisted_3 = /* @__PURE__ */ createBaseVNode("div", { class: "modal-header" }, [
   /* @__PURE__ */ createBaseVNode("h5", { class: "modal-title" }, "\u67E5\u770B\u56DE\u590D"),
@@ -16315,7 +16315,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
         ref: root,
         "data-bs-backdrop": "false"
       }, [
-        createBaseVNode("div", _hoisted_1, [
+        createBaseVNode("div", _hoisted_1$1, [
           createBaseVNode("div", _hoisted_2, [
             _hoisted_3,
             createBaseVNode("div", _hoisted_4, [
@@ -16338,6 +16338,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     };
   }
 });
+const _hoisted_1 = { class: "reply-dialog-list" };
 const _sfc_main = /* @__PURE__ */ defineComponent({
   setup(__props) {
     const lightThreadList = ref([]);
@@ -16368,7 +16369,6 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       });
     };
     onMounted(() => {
-      $(".post-wrapper").hide();
       const [tid] = /(\d)+/.exec(location.pathname);
       Api.getsThreadLightReplyList(tid).then((res) => {
         lightThreadList.value.push(...res.data.data.list);
@@ -16376,7 +16376,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       });
     });
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", null, [
+      return openBlock(), createElementBlock("div", _hoisted_1, [
         (openBlock(true), createElementBlock(Fragment, null, renderList(unref(DialogProps), (r) => {
           return openBlock(), createBlock(_sfc_main$1, {
             key: r.pid,

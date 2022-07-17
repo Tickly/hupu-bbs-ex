@@ -52,7 +52,7 @@ const generateButtons = (tid: string) => {
 
 onMounted(() => {
   // 隐藏帖子
-  $('.post-wrapper').hide();
+  // $('.post-wrapper').hide();
 
   // 帖子id
   const [tid] = /(\d)+/.exec(location.pathname) as Array<string>;
