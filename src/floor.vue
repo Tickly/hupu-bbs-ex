@@ -81,7 +81,7 @@
     <div class="clearfix"></div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import $ from 'jquery'
 export default {
   props: {
@@ -89,8 +89,7 @@ export default {
     tid: String,
   },
   computed: {
-
-    uname() {
+    uname():string {
       return this.info.userName;
     },
     ulink() {

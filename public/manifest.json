@@ -12,9 +12,11 @@
         "*://bbs.hupu.com/*.html"
       ],
       "js": [
-        "content.js"
+        "content.umd.js"
       ],
-      "css": []
+      "css": [
+        "style.css"
+      ]
     }
   ]
 }

@@ -1,0 +1,64 @@
+<template>
+  <div class="reply-dialog-list">
+    <ReplyDialogVue
+      v-for="r in DialogProps"
+      :key="r.pid"
+      :tid="r.tid"
+      :pid="r.pid"
+    />
+  </div>
+</template>
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue';
+import $ from 'jquery';
+import Api, { Reply } from '@/api';
+import ReplyDialogVue from '@/components/ReplyDialog.vue';
+import { DialogProps, open } from '@/components/useDialog';
+
+// 亮了的回复列表
+const lightThreadList = ref<Reply[]>([]);
+
+const generateButtons = (tid: string) => {
+  const $light = $('.bbs-post-wrapper.light');
+  const $content = $light.find('.bbs-post-wrapper-content');
+  const list = $content.find('.post-reply-list');
+
+  list.each((i, el) => {
+    const $admin = $(el).find('.bbs-admin-reply-post-container');
+    const admininfo = $admin.data('admininfo');
+    const { pid } = admininfo;
+
+    const reply = lightThreadList.value.find((t) => t.pid === pid);
+    // 找不到啥也不干
+    if (!reply) return;
+    // 没有评论啥也不干
+    if (!reply.check_reply_info) return;
+
+    const btnEl = document.createElement('div');
+    btnEl.classList.add('todo-list', 'todo-list-replay-dialog');
+    const span = document.createElement('span');
+    span.classList.add('todo-list-text', 'bold');
+    span.innerHTML = `弹框查看评论(${reply.check_reply_info.num})`;
+    btnEl.append(span);
+    btnEl.addEventListener('click', () => {
+      console.log(admininfo);
+
+      open(tid, pid);
+    });
+
+    $(el).find('.post-reply-list-operate').append(btnEl);
+  });
+};
+
+onMounted(() => {
+  // 隐藏帖子
+  $('.post-wrapper').hide();
+
+  // 帖子id
+  const [tid] = /(\d)+/.exec(location.pathname) as Array<string>;
+  Api.getsThreadLightReplyList(tid).then((res) => {
+    lightThreadList.value.push(...(res.data.data.list as Reply[]));
+    generateButtons(tid);
+  });
+});
+</script>
