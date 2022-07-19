@@ -1,6 +1,6 @@
 {
   "name": "hupu-view-reply",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "一款可以在电脑上方便查看帖子回复的插件。",
   "scripts": {
     "dev": "vite",
