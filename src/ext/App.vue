@@ -1,11 +1,6 @@
 <template>
   <div class="reply-dialog-list">
-    <ReplyDialogVue
-      v-for="r in DialogProps"
-      :key="r.pid"
-      :tid="r.tid"
-      :pid="r.pid"
-    />
+    <ReplyDialogVue v-for="r in DialogProps" :key="r.pid" :tid="r.tid" :pid="r.pid" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -18,6 +13,9 @@ import { DialogProps, open } from '@/components/useDialog';
 // 亮了的回复列表
 const lightThreadList = ref<Reply[]>([]);
 
+/**
+ * 在每个回复下面生成按钮
+ */
 const generateButtons = (tid: string) => {
   const $light = $('.bbs-post-wrapper.light');
   const $content = $light.find('.bbs-post-wrapper-content');
@@ -35,14 +33,12 @@ const generateButtons = (tid: string) => {
     if (!reply.check_reply_info) return;
 
     const btnEl = document.createElement('div');
-    btnEl.classList.add('todo-list', 'todo-list-replay-dialog');
+    btnEl.classList.add('todo-list', 'todo-list-reply-dialog');
     const span = document.createElement('span');
     span.classList.add('todo-list-text', 'bold');
     span.innerHTML = `弹框查看评论(${reply.check_reply_info.num})`;
     btnEl.append(span);
     btnEl.addEventListener('click', () => {
-      console.log(admininfo);
-
       open(tid, pid);
     });
 

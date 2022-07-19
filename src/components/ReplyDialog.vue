@@ -97,8 +97,8 @@ onMounted(() => {
   }
   .modal-body {
     padding: 0;
-    height: 600px;
-    overflow-y: scroll;
+    height: 520px;
+    overflow-y: auto;
 
     .list-group {
       border-radius: 0;

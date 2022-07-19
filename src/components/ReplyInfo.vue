@@ -1,30 +1,25 @@
 <template>
   <div class="reply-info d-flex align-items-start">
-    <img
-      class="user-img"
-      :src="ReplyInfo.userImg"
-      :alt="ReplyInfo.userName"
-      @error="onImageError"
-    />
+    <img class="user-img" :src="ReplyInfo.userImg" :alt="ReplyInfo.userName" @error="onImageError" />
     <div class="flex-grow-1 content-wrap">
       <div class="user-name">{{ ReplyInfo.userName }}</div>
       <div class="time">{{ ReplyInfo.time }}</div>
-      <p class="content" v-html="ReplyInfo.content"></p>
+      <p class="content" ref="contentRef" v-html="ReplyInfo.content"></p>
 
       <div class="d-flex reply-info-operate">
         <div class="me-3">亮了({{ ReplyInfo.light_count }})</div>
-        <span @click="onClick"
-          >查看回复({{ ReplyInfo.check_reply_info?.num || 0 }})</span
-        >
+        <span @click="onClick">查看回复({{ ReplyInfo.check_reply_info?.num || 0 }})</span>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { Reply } from '@/api';
-import defMan from '@/assets/def_man.webp';
-import { open } from '@/components/useDialog';
+import { onMounted, PropType, ref } from "vue";
+import { Reply } from "@/api";
+import defMan from "@/assets/def_man.webp";
+import { open } from "@/components/useDialog";
+
+const contentRef = ref<HTMLElement | null>(null);
 
 const props = defineProps({
   tid: {
@@ -49,6 +44,16 @@ const onClick = () => {
     }
   }
 };
+
+onMounted(() => {
+  const contentEl = contentRef.value as HTMLElement;
+  for (const img of contentEl.querySelectorAll('img')) {
+    if(img.dataset.src){
+      img.src = img.dataset.src
+      img.dataset.src = ''
+    }
+  }
+});
 </script>
 <style lang="less">
 .reply-info {
@@ -79,6 +84,10 @@ const onClick = () => {
     line-height: 24px;
     color: #000;
     margin-bottom: 1em;
+
+    img {
+      max-width: 100%;
+    }
   }
 
   .reply-info-operate {

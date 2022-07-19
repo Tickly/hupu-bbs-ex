@@ -16221,6 +16221,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     const props = __props;
+    const contentRef = ref(null);
     const onImageError = function(e) {
       const el = e.target;
       el.src = defMan;
@@ -16232,6 +16233,15 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
         }
       }
     };
+    onMounted(() => {
+      const contentEl = contentRef.value;
+      for (const img of contentEl.querySelectorAll("img")) {
+        if (img.dataset.src) {
+          img.src = img.dataset.src;
+          img.dataset.src = "";
+        }
+      }
+    });
     return (_ctx, _cache) => {
       var _a;
       return openBlock(), createElementBlock("div", _hoisted_1$2, [
@@ -16246,6 +16256,8 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
           createBaseVNode("div", _hoisted_5$1, toDisplayString(__props.ReplyInfo.time), 1),
           createBaseVNode("p", {
             class: "content",
+            ref_key: "contentRef",
+            ref: contentRef,
             innerHTML: __props.ReplyInfo.content
           }, null, 8, _hoisted_6$1),
           createBaseVNode("div", _hoisted_7$1, [
@@ -16356,13 +16368,12 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         if (!reply.check_reply_info)
           return;
         const btnEl = document.createElement("div");
-        btnEl.classList.add("todo-list", "todo-list-replay-dialog");
+        btnEl.classList.add("todo-list", "todo-list-reply-dialog");
         const span = document.createElement("span");
         span.classList.add("todo-list-text", "bold");
         span.innerHTML = `\u5F39\u6846\u67E5\u770B\u8BC4\u8BBA(${reply.check_reply_info.num})`;
         btnEl.append(span);
         btnEl.addEventListener("click", () => {
-          console.log(admininfo);
           open(tid, pid);
         });
         $(el).find(".post-reply-list-operate").append(btnEl);
