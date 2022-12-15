@@ -14,10 +14,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, PropType, ref } from "vue";
-import { Reply } from "@/api";
-import defMan from "@/assets/def_man.webp";
-import { open } from "@/components/useDialog";
+import { onMounted, PropType, ref } from 'vue';
+import { Reply } from '@/api';
+import defMan from '@/assets/def_man.webp';
+import { open } from '@/components/useDialog';
 
 const contentRef = ref<HTMLElement | null>(null);
 
@@ -48,9 +48,15 @@ const onClick = () => {
 onMounted(() => {
   const contentEl = contentRef.value as HTMLElement;
   for (const img of contentEl.querySelectorAll('img')) {
-    if(img.dataset.src){
-      img.src = img.dataset.src
-      img.dataset.src = ''
+    if (img.dataset.src) {
+      img.src = img.dataset.src;
+      img.dataset.src = '';
+    }
+    if (img.dataset.gif) {
+      img.classList.add('is-gif');
+      img.addEventListener('click', function () {
+        this.src = this.dataset.gif!;
+      });
     }
   }
 });
@@ -86,7 +92,32 @@ onMounted(() => {
     margin-bottom: 1em;
 
     img {
+      // display: block;
       max-width: 100%;
+    }
+
+    .lazy-gif {
+      position: relative;
+      display: inline-flex;
+      img {
+        cursor: pointer;
+      }
+
+      &::after {
+        position: absolute;
+        display: block;
+        padding: 0 4px;
+        content: 'GIF';
+        color: #fff;
+        background-color: #000;
+        right: 4px;
+        bottom: 4px;
+        font-weight: normal;
+        pointer-events: none;
+
+        // left: 0;
+        // top: 0;
+      }
     }
   }
 

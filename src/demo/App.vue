@@ -16,8 +16,10 @@
 import { DialogProps, open } from '@/components/useDialog';
 import ReplyView from '@/components/ReplyDialog.vue';
 
+const tid = '56923660'
+const pid = '259233'
 const onClick = () => {
-  open('54807408', '149566');
+  open(tid, pid);
 };
 </script>
 <style lang="less">
