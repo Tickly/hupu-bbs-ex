@@ -14,10 +14,11 @@
 </template>
 <script lang="ts" setup>
 import { DialogProps, open } from '@/components/useDialog';
-import ReplyView from '@/components/ReplyDialog.vue';
+import ReplyView from '@/components/ReplyDialog';
 
-const tid = '56923660'
-const pid = '259233'
+const tid = '57448942'
+const pid = '298595'
+
 const onClick = () => {
   open(tid, pid);
 };

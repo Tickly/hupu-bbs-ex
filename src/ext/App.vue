@@ -7,7 +7,7 @@
 import { onMounted, ref } from 'vue';
 import $ from 'jquery';
 import Api, { Reply } from '@/api';
-import ReplyDialogVue from '@/components/ReplyDialog.vue';
+import ReplyDialogVue from '@/components/ReplyDialog';
 import { DialogProps, open } from '@/components/useDialog';
 
 // 亮了的回复列表

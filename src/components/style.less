@@ -1,0 +1,122 @@
+@gap: 12px;
+.reply-dialog {
+  .ant-modal {
+    top: 24px;
+  }
+  .ant-modal-content {
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    box-shadow: none;
+
+    .ant-modal-body {
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      height: 600px;
+
+      .reply-dialog-body {
+        flex-grow: 1;
+        overflow-y: auto;
+      }
+      .reply-dialog-footer {
+        margin-top: 24px;
+        flex-shrink: 0;
+        text-align: right;
+      }
+    }
+  }
+
+  .reply-item {
+    display: flex;
+    padding: 24px;
+    border-radius: 12px;
+    color: #262626;
+    background-color: white;
+
+    + .reply-item {
+      margin-top: @gap;
+    }
+
+    .reply-right {
+      flex-grow: 1;
+
+      .reply-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .user {
+          display: flex;
+          gap: @gap;
+          align-items: flex-start;
+          font-size: 16px;
+          line-height: 1;
+
+          .user-name {
+          }
+          .time {
+          }
+          span {
+            font-size: 10px;
+            color: #8c8c8c;
+          }
+        }
+        .reply-info-operate {
+          display: flex;
+          gap: @gap;
+          flex-shrink: 0;
+          color: #8c8c8c;
+
+          span {
+            cursor: pointer;
+          }
+        }
+      }
+
+      .content {
+        font-size: 14px;
+        // line-height: 24px;
+        margin-bottom: 0;
+        margin-top: @gap;
+
+        p {
+          margin-bottom: 0;
+        }
+
+        img {
+          max-width: 100%;
+        }
+
+        .lazy-gif {
+          position: relative;
+          display: inline-flex;
+          img {
+            cursor: pointer;
+          }
+
+          &::after {
+            position: absolute;
+            display: block;
+            padding: 0 4px;
+            content: 'GIF';
+            color: #fff;
+            background-color: #000;
+            right: 4px;
+            bottom: 4px;
+            font-weight: normal;
+            pointer-events: none;
+          }
+        }
+      }
+    }
+
+    .user-img {
+      @s: 48px;
+      width: @s;
+      height: @s;
+      border-radius: 50%;
+      margin-right: 1em;
+    }
+  }
+}

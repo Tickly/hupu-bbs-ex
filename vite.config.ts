@@ -1,25 +1,29 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import vueJsx from '@vitejs/plugin-vue-jsx';
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(), vueJsx()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
+      '@': path.resolve(__dirname, 'src')
+    }
+  },
+  define: {
+    'process.env.NODE_ENV': `"${process.env.NODE_ENV}"`
   },
   server: {
-    host:'0.0.0.0',
+    host: '0.0.0.0',
     proxy: {
-      '/api': 'https://bbs.hupu.com',
-    },
+      '/api': 'https://bbs.hupu.com'
+    }
   },
   build: {
     lib: {
       entry: 'src/ext/index.ts',
       fileName: 'content',
-      name: 'bbs',
+      name: 'bbs'
     },
     rollupOptions: {
       // external: ['vue'],
@@ -31,7 +35,7 @@ export default defineConfig({
         // globals: {
         //   vue: 'Vue',
         // },
-      },
-    },
-  },
+      }
+    }
+  }
 });
