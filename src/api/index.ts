@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { http } from './http';
 
 const host = 'https://bbs.mobileapi.hupu.com';
 const path = '/3/7.3.8/threads/';
@@ -48,7 +48,7 @@ export interface Reply {
 // 获取某个回复的回复
 function getCheckReply(tid: string, pid: string) {
   let url = host + path + 'getCheckReply';
-  return axios.get(url, {
+  return http.get(url, {
     params: {
       tid,
       pid,
@@ -61,7 +61,7 @@ function getCheckReply(tid: string, pid: string) {
 // 获取帖子的高亮回复
 function getsThreadLightReplyList(tid: string) {
   let url = host + path + 'getsThreadLightReplyList';
-  return axios.get(url, {
+  return http.get(url, {
     params: {
       tid,
       offline: 'json',
@@ -69,6 +69,7 @@ function getsThreadLightReplyList(tid: string) {
     }
   });
 }
+
 
 export default {
   getCheckReply,

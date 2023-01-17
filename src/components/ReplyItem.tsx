@@ -1,7 +1,7 @@
 import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
 import { Reply } from '@/api';
 import { open } from '@/components/useDialog';
-
+import { LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
 export default defineComponent({
   name: 'ReplyItem',
   props: {
@@ -74,8 +74,16 @@ export default defineComponent({
               <span>{reply.location}</span>
             </div>
             <div class="reply-info-operate">
-              <div>亮了({reply.light_count})</div>
-              {props.isAuthor ? null : <span onClick={viewReply}>查看回复({reply.check_reply_info?.num || 0})</span>}
+              <div>
+                <LikeOutlined />
+                <span>{reply.light_count}</span>
+              </div>
+              {props.isAuthor ? null : (
+                <div class="reply" onClick={viewReply}>
+                  <MessageOutlined />
+                  <span>{reply.check_reply_info?.num || 0}</span>
+                </div>
+              )}
             </div>
           </div>
           <p class="content" ref={contentRef} v-html={reply.content}></p>

@@ -6,6 +6,7 @@ import { close, closeAll, more1, DialogProps } from './useDialog';
 import './style.less';
 
 export default defineComponent({
+  name: 'ReplyModal',
   props: {
     /**
      * 帖子id
@@ -23,7 +24,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const visible = ref(false);
+    const visible = ref(true);
     const loading = ref(true);
 
     // 查看的回复
@@ -34,13 +35,13 @@ export default defineComponent({
 
     function onClose() {
       visible.value = false;
-      nextTick(() => {
-        close(props.pid);
-      });
+    }
+    function afterClose() {
+      close(props.pid);
     }
 
     onMounted(() => {
-      visible.value = true;
+      // visible.value = true;
 
       loading.value = true;
       Api.getCheckReply(props.tid as string, props.pid as string).then(res => {
@@ -64,9 +65,20 @@ export default defineComponent({
         closable={false}
         keyboard={true}
         onCancel={onClose}
+        afterClose={afterClose}
+        destroyOnClose={true}
+        bodyStyle={{ color: 'red' }}
+        dialogStyle={{ color: 'red' }}
+        style={{
+          left: 'calc(50% - 400px)'
+        }}
       >
         <div class="reply-dialog-body">
-          {loading.value ? null : (
+          {loading.value ? (
+            <div class="is-loading">
+              <a-spin tip="正在获取回复列表..." />
+            </div>
+          ) : (
             <div>
               <ReplyItem isAuthor tid={props.tid} reply={CurrentReply.value} />
 
@@ -82,12 +94,12 @@ export default defineComponent({
         <div class="reply-dialog-footer">
           <a-space>
             {more1.value ? (
-              <a-button type="primary" onClick={closeAll}>
+              <a-button type="link" onClick={closeAll}>
                 关闭全部
               </a-button>
             ) : null}
-            <a-button type="primary" onClick={onClose}>
-              关闭(Esc)
+            <a-button type="primary" shape="round" onClick={onClose} style="width:128px;">
+              关闭 (Esc)
             </a-button>
           </a-space>
         </div>
