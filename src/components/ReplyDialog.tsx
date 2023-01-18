@@ -1,9 +1,12 @@
-import { defineComponent, h, nextTick, onMounted, ref } from 'vue';
+import { defineComponent, h, nextTick, onMounted, ref, watch } from 'vue';
 import { Modal } from 'ant-design-vue';
 import ReplyItem from './ReplyItem';
 import Api, { Reply } from '@/api';
 import { close, closeAll, more1, DialogProps } from './useDialog';
+import { useScrollbar } from './usePerfectScrollbar';
 import './style.less';
+
+const Scrollbar = useScrollbar();
 
 export default defineComponent({
   name: 'ReplyModal',
@@ -27,6 +30,8 @@ export default defineComponent({
     const visible = ref(true);
     const loading = ref(true);
 
+    const modalRef = ref(null);
+
     // 查看的回复
     const CurrentReply = ref();
 
@@ -35,6 +40,7 @@ export default defineComponent({
 
     function onClose() {
       visible.value = false;
+      Scrollbar.unBind();
     }
     function afterClose() {
       close(props.pid);
@@ -42,6 +48,11 @@ export default defineComponent({
 
     onMounted(() => {
       // visible.value = true;
+      console.log(modalRef.value);
+      if (modalRef.value) {
+        const el = modalRef.value as HTMLDivElement;
+        Scrollbar.bind(el);
+      }
 
       loading.value = true;
       Api.getCheckReply(props.tid as string, props.pid as string).then(res => {
@@ -73,7 +84,7 @@ export default defineComponent({
           left: 'calc(50% - 400px)'
         }}
       >
-        <div class="reply-dialog-body">
+        <div class="reply-dialog-body" ref={modalRef}>
           {loading.value ? (
             <div class="is-loading">
               <a-spin tip="正在获取回复列表..." />
