@@ -1,5 +1,10 @@
-import { defineComponent, h, nextTick, onMounted, ref, watch } from 'vue';
-import { Modal } from 'ant-design-vue';
+import { defineComponent, onMounted, ref, watch } from 'vue';
+import { Modal, Spin, Divider, Space, Button } from 'ant-design-vue';
+import 'ant-design-vue/es/modal/style/css';
+import 'ant-design-vue/es/spin/style/css';
+import 'ant-design-vue/es/divider/style/css';
+import 'ant-design-vue/es/space/style/css';
+import 'ant-design-vue/es/button/style/css';
 import ReplyItem from './ReplyItem';
 import Api, { Reply } from '@/api';
 import { close, closeAll, more1, DialogProps } from './useDialog';
@@ -78,8 +83,6 @@ export default defineComponent({
         onCancel={onClose}
         afterClose={afterClose}
         destroyOnClose={true}
-        bodyStyle={{ color: 'red' }}
-        dialogStyle={{ color: 'red' }}
         style={{
           left: 'calc(50% - 400px)'
         }}
@@ -87,13 +90,13 @@ export default defineComponent({
         <div class="reply-dialog-body" ref={modalRef}>
           {loading.value ? (
             <div class="is-loading">
-              <a-spin tip="正在获取回复列表..." />
+              <Spin tip="正在获取回复列表..." />
             </div>
           ) : (
             <div>
               <ReplyItem isAuthor tid={props.tid} reply={CurrentReply.value} />
 
-              <a-divider />
+              <Divider />
 
               {ReplyList.value.map(reply => (
                 <ReplyItem tid={props.tid} reply={reply} />
@@ -103,16 +106,16 @@ export default defineComponent({
         </div>
 
         <div class="reply-dialog-footer">
-          <a-space>
+          <Space>
             {more1.value ? (
-              <a-button type="link" onClick={closeAll}>
+              <Button type="link" onClick={closeAll}>
                 关闭全部
-              </a-button>
+              </Button>
             ) : null}
-            <a-button type="primary" shape="round" onClick={onClose} style="width:128px;">
+            <Button type="primary" shape="round" onClick={onClose} style="width:128px;">
               关闭 (Esc)
-            </a-button>
-          </a-space>
+            </Button>
+          </Space>
         </div>
       </Modal>
     );
