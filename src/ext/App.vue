@@ -17,16 +17,21 @@ const lightThreadList = ref<Reply[]>([]);
  * 在每个回复下面生成按钮
  */
 const generateButtons = (tid: string) => {
-  const $light = $('.bbs-post-wrapper.light');
-  const $content = $light.find('.bbs-post-wrapper-content');
-  const list = $content.find('.post-reply-list');
+  // 这里默认取第一个
+  const $lightContainer = $('.wrapper-container').eq(0);
+   
+
+  const list = $lightContainer.find('.post-reply-list-wrapper');
 
   list.each((i, el) => {
+
     const $admin = $(el).find('.bbs-admin-reply-post-container');
     const admininfo = $admin.data('admininfo');
+    // 取到回帖的id
     const { pid } = admininfo;
 
-    const reply = lightThreadList.value.find((t) => t.pid === pid);
+    // 从接口拿数据
+    const reply = lightThreadList.value.find(t => t.pid === pid);
     // 找不到啥也不干
     if (!reply) return;
     // 没有评论啥也不干
@@ -42,7 +47,9 @@ const generateButtons = (tid: string) => {
       open(tid, pid);
     });
 
-    $(el).find('.post-reply-list-operate').append(btnEl);
+    $(el)
+      .find('.post-reply-list-operate')
+      .append(btnEl);
   });
 };
 
@@ -52,7 +59,7 @@ onMounted(() => {
 
   // 帖子id
   const [tid] = /(\d)+/.exec(location.pathname) as Array<string>;
-  Api.getsThreadLightReplyList(tid).then((res) => {
+  Api.getsThreadLightReplyList(tid).then(res => {
     lightThreadList.value.push(...(res.data.data.list as Reply[]));
     generateButtons(tid);
   });
