@@ -1,6 +1,6 @@
 {
   "name": "虎扑论坛增强",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "manifest_version": 3,
   "description": "一款可以在电脑上方便查看虎扑论坛帖子回复的插件。通过弹框形式展示回复列表，达到类似APP上的交互体验。",
   "host_permissions": [
