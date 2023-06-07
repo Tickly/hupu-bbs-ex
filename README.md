@@ -38,7 +38,7 @@
 ## 本地安装
 
 1. 进入[下载页面](https://github.com/Tickly/hupu-bbs-ex/releases)，选择最新版本的压缩包`hupu-bbs-ex.zip`下载到电脑并解压。  
-1. 打开Chrome浏览器的扩展程序页面（或者地址栏输入`chrome://extensions/），右上角打开`开发者模式`
+1. 打开Chrome浏览器的扩展程序页面（或者地址栏输入`chrome://extensions/`），右上角打开`开发者模式`
 1. 点击`加载已解压的扩展程序`，选择到`hupu-bbs-ex`文件夹即可。
 
 # 使用
