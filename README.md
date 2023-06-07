@@ -31,25 +31,15 @@
 
 # 如何安装
 
-## 在线安装，Chrome商店(推荐)
+## 在线安装，Chrome 商店(推荐)
 
 - 打开 Chrome 网上应用店搜索【虎扑论坛增强】或者直接[点击此处](https://chrome.google.com/webstore/detail/aoioflhjmndhohediakconfmdmmamjcb)
 
 ## 本地安装
 
-### 源代码模式
-
-1. 下载项目代码
-1. 打开 Chrome 浏览器的扩展程序页面（直接地址栏输入`chrome://extensions/`)，右上角打开开发者模式
-1. 【加载已解压的扩展程序】选择到 `hupu-bbs-ex` 文件夹，确定
-
-> 请注意 `hupu-bbs-ex`文件夹下面有个`manifest.json`文件
-
-### 打包文件形式
-
-1. 直接下载`hupu-bbs-ex.crx`
-1. 打开 Chrome 浏览器的扩展程序页面（直接地址栏输入`chrome://extensions/`)，右上角打开开发者模式
-1. 拖拽文件到页面即可
+1. 进入[下载页面](https://github.com/Tickly/hupu-bbs-ex/releases)，选择最新版本的压缩包`hupu-bbs-ex.zip`下载到电脑并解压。  
+1. 打开Chrome浏览器的扩展程序页面（或者地址栏输入`chrome://extensions/），右上角打开`开发者模式`
+1. 点击`加载已解压的扩展程序`，选择到`hupu-bbs-ex`文件夹即可。
 
 # 使用
 
@@ -58,6 +48,7 @@
 # FAQ
 
 ## 安装插件之后发现没有出现【弹框查看回复】的按钮
+
 - 可能的原因是虎扑网页更新过，页面的元素结构发生了变动，导致无法正常定位，请联系我更新。
 
 # 二次开发
