@@ -1,6 +1,6 @@
 import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
-import { Reply } from '@/api';
-import { open } from '@/components/useDialog';
+import { Reply } from '../api';
+import { open } from '../components/useDialog';
 import { LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
 export default defineComponent({
   name: 'ReplyItem',

@@ -5,10 +5,9 @@
 </template>
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import $ from 'jquery';
-import Api, { Reply } from '@/api';
-import ReplyDialogVue from '@/components/ReplyDialog';
-import { DialogProps, open } from '@/components/useDialog';
+import Api, { Reply } from './api';
+import ReplyDialogVue from './components/ReplyDialog';
+import { DialogProps, open } from './components/useDialog';
 
 // 亮了的回复列表
 const lightThreadList = ref<Reply[]>([]);
@@ -16,10 +15,11 @@ const lightThreadList = ref<Reply[]>([]);
 /**
  * 在每个回复下面生成按钮
  */
-const generateButtons = (tid: string) => {
+const generateButtons = ($: typeof import('jquery')) => (tid: string) => {
   // 这里默认取第一个
   const $lightContainer = $('.wrapper-container').eq(0);
-   
+
+  console.log(123, $lightContainer);
 
   const list = $lightContainer.find('.post-reply-list-wrapper');
 
@@ -53,7 +53,9 @@ const generateButtons = (tid: string) => {
   });
 };
 
-onMounted(() => {
+onMounted(async () => {
+  const { default: $ } = await import('jquery');
+
   // 隐藏帖子
   // $('.post-wrapper').hide();
 
@@ -61,7 +63,7 @@ onMounted(() => {
   const [tid] = /(\d)+/.exec(location.pathname) as Array<string>;
   Api.getsThreadLightReplyList(tid).then(res => {
     lightThreadList.value.push(...(res.data.data.list as Reply[]));
-    generateButtons(tid);
+    generateButtons($)(tid);
   });
 });
 </script>
