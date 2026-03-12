@@ -8,6 +8,7 @@ import { onMounted, ref } from 'vue';
 import Api, { Reply } from './api';
 import ReplyDialogVue from './components/ReplyDialog';
 import { DialogProps, open } from './components/useDialog';
+import { analyticsProxyClient } from '@/analytics/sdk';
 
 // 亮了的回复列表
 const lightThreadList = ref<Reply[]>([]);
@@ -72,7 +73,7 @@ const generateButtons = (tid: string) => {
     span.innerHTML = `弹框查看评论(${reply.check_reply_info.num})`;
     btnEl.append(span);
     btnEl.addEventListener('click', () => {
-      open(tid, pid);
+      handleClick(tid, pid);
     });
 
     // 挂载到 .post-reply-list-operate
@@ -83,12 +84,23 @@ const generateButtons = (tid: string) => {
   });
 };
 
+function handleClick(tid: string, pid: string) {
+  open(tid, pid);
+
+  void analyticsProxyClient.reportActive();
+
+}
+
+
+
+
 onMounted(async () => {
 
   // 帖子id
   const tidMatch = location.pathname.match(/(\d)+/);
   const tid = tidMatch ? tidMatch[0] : '';
 
+  console.log('tid', tid);
   if (!tid) return;
 
   Api.getsThreadLightReplyList(tid).then(res => {

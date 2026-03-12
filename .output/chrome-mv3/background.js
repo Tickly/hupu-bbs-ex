@@ -97,12 +97,6 @@ var background = function() {
         `If using a wildcard (*), it must go at the start of the hostname`
       );
   }
-  const definition = defineBackground(() => {
-    console.log("background");
-  });
-  background;
-  function initPlugins() {
-  }
   function getDefaultExportFromCjs(x) {
     return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
   }
@@ -1094,6 +1088,94 @@ var background = function() {
   var browserPolyfillExports = requireBrowserPolyfill();
   const originalBrowser = /* @__PURE__ */ getDefaultExportFromCjs(browserPolyfillExports);
   const browser = originalBrowser;
+  function createAnalyticsClient(opts) {
+    const endpoint = opts.endpoint;
+    const appId = opts.appId;
+    const apiKey = opts.apiKey;
+    const version = opts.version;
+    const storage = opts.storage ?? browser.storage.local;
+    if (!appId || !apiKey || !version) {
+      throw new Error("endpoint/appId/apiKey/version required");
+    }
+    const KEY_CLIENT_ID = "analytics_client_id";
+    const KEY_LAST_DAY = `analytics_last_report_day:${appId}`;
+    function getShanghaiDay(ts = Date.now()) {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Shanghai",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).formatToParts(new Date(ts));
+      const map = {};
+      for (const p of parts) if (p.type !== "literal") map[p.type] = p.value;
+      return `${map.year}${map.month}${map.day}`;
+    }
+    async function getOne(key) {
+      const r = await storage.get(key);
+      return r[key];
+    }
+    async function setOne(key, value) {
+      await storage.set({ [key]: value });
+    }
+    async function getOrCreateClientId() {
+      const existing = await getOne(KEY_CLIENT_ID);
+      if (existing) return existing;
+      const uuid = crypto.randomUUID();
+      await setOne(KEY_CLIENT_ID, uuid);
+      return uuid;
+    }
+    async function reportActive() {
+      console.log("reportActive");
+      const day = getShanghaiDay();
+      const last = await getOne(KEY_LAST_DAY);
+      if (last === day) return { ok: true, day, skipped: true };
+      const clientId = await getOrCreateClientId();
+      const body = {
+        app_id: appId,
+        client_id: clientId,
+        version,
+        ts: Date.now()
+      };
+      console.log("body", body);
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) return { ok: false, day, status: res.status };
+      await setOne(KEY_LAST_DAY, day);
+      return { ok: true, day, skipped: false };
+    }
+    return { reportActive };
+  }
+  background;
+  function useAnalytics() {
+    var _a;
+    const analyticsVersion = typeof browser !== "undefined" && browser.runtime && typeof browser.runtime.getManifest === "function" && ((_a = browser.runtime.getManifest()) == null ? void 0 : _a.version) || "0.0.0-dev";
+    const analyticsClient = createAnalyticsClient({
+      endpoint: "https://hupu-bbs-ex-analytics.vercel.app/api/active",
+      appId: "hupu-bbs-ex",
+      apiKey: "dev_key_1",
+      version: analyticsVersion
+    });
+    browser.runtime.onMessage.addListener((message) => {
+      if (message.type === "analytics/reportActive") {
+        void analyticsClient.reportActive();
+        return true;
+      }
+      return false;
+    });
+  }
+  const definition = defineBackground(() => {
+    console.log("background");
+    useAnalytics();
+  });
+  background;
+  function initPlugins() {
+  }
   function print(method, ...args) {
     if (typeof args[0] === "string") {
       const message = args.shift();

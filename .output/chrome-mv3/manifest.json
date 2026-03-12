@@ -1,8 +1,19 @@
 {
   "manifest_version": 3,
   "name": "hupu-view-reply",
-  "description": "一款可以在电脑上方便查看帖子回复的插件。",
+  "description": "一款可以在电脑上方便查看虎扑论坛帖子回复的插件。通过弹框形式展示回复列表，达到类似APP上的交互体验。",
   "version": "1.2.0",
+  "host_permissions": [
+    "https://bbs.mobileapi.hupu.com/",
+    "https://hupu-bbs-ex-analytics.vercel.app/",
+    "*://bbs.hupu.com/*",
+    "http://localhost/*"
+  ],
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting"
+  ],
   "commands": {
     "wxt:reload-extension": {
       "description": "Reload the extension during development",
@@ -14,16 +25,8 @@
   "background": {
     "service_worker": "background.js"
   },
-  "host_permissions": [
-    "*://bbs.hupu.com/*",
-    "http://localhost/*"
-  ],
   "content_security_policy": {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval' http://localhost:3000; object-src 'self';",
     "sandbox": "script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:3000; sandbox allow-scripts allow-forms allow-popups allow-modals; child-src 'self';"
-  },
-  "permissions": [
-    "tabs",
-    "scripting"
-  ]
+  }
 }

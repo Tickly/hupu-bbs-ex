@@ -1,22 +1,24 @@
+import { browser } from 'wxt/browser';
+
 // src/analytics/sdk.ts
 export type AnalyticsClientOptions = {
   endpoint: string; // e.g. https://hupu-bbs-ex-analytics.vercel.app/api/active
   appId: string;    // e.g. hupu-bbs-ex
   apiKey: string;   // will be extractable in extension
   version: string;  // e.g. chrome.runtime.getManifest().version
-  storage?: Pick<typeof chrome.storage.local, "get" | "set">; // for testing
+  storage?: Pick<typeof browser.storage.local, "get" | "set">; // for testing
 };
 
 export type ReportActiveResult =
   | { ok: true; day: string; skipped: boolean }
   | { ok: false; day: string; status: number };
 
-export function createAnalyticsClient(opts: AnalyticsClientOptions) {
+export function createAnalyticsClient (opts: AnalyticsClientOptions) {
   const endpoint = opts.endpoint;
   const appId = opts.appId;
   const apiKey = opts.apiKey;
   const version = opts.version;
-  const storage = opts.storage ?? chrome.storage.local;
+  const storage = opts.storage ?? browser.storage.local;
 
   if (!endpoint || !appId || !apiKey || !version) {
     throw new Error("endpoint/appId/apiKey/version required");
@@ -25,7 +27,7 @@ export function createAnalyticsClient(opts: AnalyticsClientOptions) {
   const KEY_CLIENT_ID = "analytics_client_id";
   const KEY_LAST_DAY = `analytics_last_report_day:${appId}`;
 
-  function getShanghaiDay(ts = Date.now()) {
+  function getShanghaiDay (ts = Date.now()) {
     const parts = new Intl.DateTimeFormat("en-CA", {
       timeZone: "Asia/Shanghai",
       year: "numeric",
@@ -38,16 +40,16 @@ export function createAnalyticsClient(opts: AnalyticsClientOptions) {
     return `${map.year}${map.month}${map.day}`; // YYYYMMDD
   }
 
-  async function getOne<T>(key: string): Promise<T | undefined> {
+  async function getOne<T> (key: string): Promise<T | undefined> {
     const r = await storage.get(key);
     return (r as any)[key] as T | undefined;
   }
 
-  async function setOne(key: string, value: unknown) {
+  async function setOne (key: string, value: unknown) {
     await storage.set({ [key]: value } as any);
   }
 
-  async function getOrCreateClientId() {
+  async function getOrCreateClientId () {
     const existing = await getOne<string>(KEY_CLIENT_ID);
     if (existing) return existing;
     const uuid = crypto.randomUUID();
@@ -55,14 +57,24 @@ export function createAnalyticsClient(opts: AnalyticsClientOptions) {
     return uuid;
   }
 
-  async function reportActive(): Promise<
+  async function reportActive (): Promise<
     ReportActiveResult
   > {
+    console.log('reportActive');
+    
     const day = getShanghaiDay();
     const last = await getOne<string>(KEY_LAST_DAY);
     if (last === day) return { ok: true, day, skipped: true };
 
     const clientId = await getOrCreateClientId();
+
+    const body = {
+      app_id: appId,
+      client_id: clientId,
+      version,
+      ts: Date.now(),
+    };
+    console.log('body', body);
 
     const res = await fetch(endpoint, {
       method: "POST",
@@ -70,12 +82,7 @@ export function createAnalyticsClient(opts: AnalyticsClientOptions) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({
-        app_id: appId,
-        client_id: clientId,
-        version,
-        ts: Date.now(),
-      }),
+      body: JSON.stringify(body),
     });
 
     if (!res.ok) return { ok: false, day, status: res.status };
@@ -87,10 +94,10 @@ export function createAnalyticsClient(opts: AnalyticsClientOptions) {
   return { reportActive };
 }
 
-export function createAnalyticsProxyClient() {
-  async function reportActive(): Promise<ReportActiveResult | undefined> {
+export function createAnalyticsProxyClient () {
+  async function reportActive (): Promise<ReportActiveResult | undefined> {
     try {
-      const r = (await chrome.runtime.sendMessage({
+      const r = (await browser.runtime.sendMessage({
         type: 'analytics/reportActive',
       })) as ReportActiveResult | undefined;
       return r;

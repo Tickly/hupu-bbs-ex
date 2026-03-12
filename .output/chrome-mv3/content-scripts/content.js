@@ -24815,118 +24815,6 @@ summary tabindex target title type usemap value width wmode wrap`;
       });
     }
   });
-  const _sfc_main = /* @__PURE__ */ defineComponent({
-    __name: "App",
-    setup(__props, { expose: __expose }) {
-      __expose();
-      const lightThreadList = /* @__PURE__ */ ref([]);
-      const generateButtons = (tid) => {
-        const $lightContainer = document.querySelector(".wrapper-container");
-        if (!$lightContainer) return;
-        const replyWrappers = $lightContainer.querySelectorAll(".post-reply-list-wrapper");
-        replyWrappers.forEach((el) => {
-          const adminEl = el.querySelector(".bbs-admin-reply-post-container");
-          if (!adminEl) return;
-          let admininfo = null;
-          const admininfoRaw = adminEl.getAttribute("data-admininfo");
-          try {
-            admininfo = admininfoRaw && JSON.parse(admininfoRaw);
-          } catch (e2) {
-            if (adminEl instanceof HTMLElement && (admininfoRaw === null || admininfoRaw === void 0)) {
-              if (adminEl.dataset && adminEl.dataset.admininfo) {
-                try {
-                  admininfo = JSON.parse(adminEl.dataset.admininfo);
-                } catch {
-                }
-              }
-            }
-          }
-          if (typeof admininfo !== "object" || !(admininfo == null ? void 0 : admininfo.pid)) {
-            if (adminEl.data && adminEl.data.admininfo) {
-              admininfo = adminEl.data.admininfo;
-            } else {
-              return;
-            }
-          }
-          const { pid } = admininfo;
-          const reply = lightThreadList.value.find((t2) => t2.pid === pid);
-          if (!reply) return;
-          if (!reply.check_reply_info) return;
-          const btnEl = document.createElement("div");
-          btnEl.classList.add("todo-list", "todo-list-reply-dialog");
-          const span = document.createElement("span");
-          span.classList.add("todo-list-text", "bold");
-          span.innerHTML = `弹框查看评论(${reply.check_reply_info.num})`;
-          btnEl.append(span);
-          btnEl.addEventListener("click", () => {
-            open(tid, pid);
-          });
-          const operateEl = el.querySelector(".post-reply-list-operate");
-          if (operateEl) {
-            operateEl.appendChild(btnEl);
-          }
-        });
-      };
-      onMounted(async () => {
-        const tidMatch = location.pathname.match(/(\d)+/);
-        const tid = tidMatch ? tidMatch[0] : "";
-        if (!tid) return;
-        Api.getsThreadLightReplyList(tid).then((res) => {
-          lightThreadList.value.push(...res.data.data.list);
-          generateButtons(tid);
-        });
-      });
-      const __returned__ = { lightThreadList, generateButtons, get ReplyDialogVue() {
-        return ReplyDialogVue;
-      }, get DialogProps() {
-        return DialogProps;
-      } };
-      Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
-      return __returned__;
-    }
-  });
-  content;
-  const _export_sfc = (sfc, props) => {
-    const target = sfc.__vccOpts || sfc;
-    for (const [key2, val] of props) {
-      target[key2] = val;
-    }
-    return target;
-  };
-  const _hoisted_1 = { class: "reply-dialog-list" };
-  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-    return openBlock(), createElementBlock("div", _hoisted_1, [
-      (openBlock(true), createElementBlock(
-        Fragment,
-        null,
-        renderList($setup.DialogProps, (r2) => {
-          return openBlock(), createBlock($setup["ReplyDialogVue"], {
-            key: r2.pid,
-            tid: r2.tid,
-            pid: r2.pid
-          }, null, 8, ["tid", "pid"]);
-        }),
-        128
-        /* KEYED_FRAGMENT */
-      ))
-    ]);
-  }
-  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__file", "E:/code/0-github/hupu-bbs-ex/entrypoints/content/App.vue"]]);
-  const definition = defineContentScript({
-    matches: ["*://bbs.hupu.com/*"],
-    main() {
-      window.addEventListener("load", () => {
-        const el = document.createElement("div");
-        el.setAttribute("id", "hupu-bbs-ex");
-        document.body.appendChild(el);
-        const app = createApp({
-          render: () => h$1(App)
-        });
-        app.mount(el);
-      });
-    }
-  });
-  content;
   var browserPolyfill$1 = { exports: {} };
   var browserPolyfill = browserPolyfill$1.exports;
   var hasRequiredBrowserPolyfill;
@@ -25915,6 +25803,140 @@ summary tabindex target title type usemap value width wmode wrap`;
   var browserPolyfillExports = requireBrowserPolyfill();
   const originalBrowser = /* @__PURE__ */ getDefaultExportFromCjs(browserPolyfillExports);
   const browser = originalBrowser;
+  function createAnalyticsProxyClient() {
+    async function reportActive() {
+      try {
+        const r2 = await browser.runtime.sendMessage({
+          type: "analytics/reportActive"
+        });
+        return r2;
+      } catch {
+        return void 0;
+      }
+    }
+    return { reportActive };
+  }
+  const analyticsProxyClient = createAnalyticsProxyClient();
+  content;
+  const _sfc_main = /* @__PURE__ */ defineComponent({
+    __name: "App",
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const lightThreadList = /* @__PURE__ */ ref([]);
+      const generateButtons = (tid) => {
+        const $lightContainer = document.querySelector(".wrapper-container");
+        if (!$lightContainer) return;
+        const replyWrappers = $lightContainer.querySelectorAll(".post-reply-list-wrapper");
+        replyWrappers.forEach((el) => {
+          const adminEl = el.querySelector(".bbs-admin-reply-post-container");
+          if (!adminEl) return;
+          let admininfo = null;
+          const admininfoRaw = adminEl.getAttribute("data-admininfo");
+          try {
+            admininfo = admininfoRaw && JSON.parse(admininfoRaw);
+          } catch (e2) {
+            if (adminEl instanceof HTMLElement && (admininfoRaw === null || admininfoRaw === void 0)) {
+              if (adminEl.dataset && adminEl.dataset.admininfo) {
+                try {
+                  admininfo = JSON.parse(adminEl.dataset.admininfo);
+                } catch {
+                }
+              }
+            }
+          }
+          if (typeof admininfo !== "object" || !(admininfo == null ? void 0 : admininfo.pid)) {
+            if (adminEl.data && adminEl.data.admininfo) {
+              admininfo = adminEl.data.admininfo;
+            } else {
+              return;
+            }
+          }
+          const { pid } = admininfo;
+          const reply = lightThreadList.value.find((t2) => t2.pid === pid);
+          if (!reply) return;
+          if (!reply.check_reply_info) return;
+          const btnEl = document.createElement("div");
+          btnEl.classList.add("todo-list", "todo-list-reply-dialog");
+          const span = document.createElement("span");
+          span.classList.add("todo-list-text", "bold");
+          span.innerHTML = `弹框查看评论(${reply.check_reply_info.num})`;
+          btnEl.append(span);
+          btnEl.addEventListener("click", () => {
+            handleClick(tid, pid);
+          });
+          const operateEl = el.querySelector(".post-reply-list-operate");
+          if (operateEl) {
+            operateEl.appendChild(btnEl);
+          }
+        });
+      };
+      function handleClick(tid, pid) {
+        open(tid, pid);
+        void analyticsProxyClient.reportActive();
+      }
+      onMounted(async () => {
+        const tidMatch = location.pathname.match(/(\d)+/);
+        const tid = tidMatch ? tidMatch[0] : "";
+        console.log("tid", tid);
+        if (!tid) return;
+        Api.getsThreadLightReplyList(tid).then((res) => {
+          lightThreadList.value.push(...res.data.data.list);
+          generateButtons(tid);
+        });
+      });
+      const __returned__ = { lightThreadList, generateButtons, handleClick, get ReplyDialogVue() {
+        return ReplyDialogVue;
+      }, get DialogProps() {
+        return DialogProps;
+      } };
+      Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
+      return __returned__;
+    }
+  });
+  content;
+  const _export_sfc = (sfc, props) => {
+    const target = sfc.__vccOpts || sfc;
+    for (const [key2, val] of props) {
+      target[key2] = val;
+    }
+    return target;
+  };
+  const _hoisted_1 = { class: "reply-dialog-list" };
+  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return openBlock(), createElementBlock("div", _hoisted_1, [
+      (openBlock(true), createElementBlock(
+        Fragment,
+        null,
+        renderList($setup.DialogProps, (r2) => {
+          return openBlock(), createBlock($setup["ReplyDialogVue"], {
+            key: r2.pid,
+            tid: r2.tid,
+            pid: r2.pid
+          }, null, 8, ["tid", "pid"]);
+        }),
+        128
+        /* KEYED_FRAGMENT */
+      ))
+    ]);
+  }
+  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["render", _sfc_render], ["__file", "E:/code/0-github/hupu-bbs-ex/entrypoints/content/App.vue"]]);
+  const definition = defineContentScript({
+    matches: ["*://bbs.hupu.com/*"],
+    main() {
+      console.log("main");
+      window.addEventListener("load", () => {
+        console.log("page load");
+        const el = document.createElement("div");
+        el.setAttribute("id", "hupu-bbs-ex");
+        document.body.appendChild(el);
+        const app = createApp({
+          render: () => h$1(App)
+        });
+        app.mount(el);
+      });
+    }
+  });
+  content;
   function print$1(method, ...args) {
     if (typeof args[0] === "string") {
       const message = args.shift();

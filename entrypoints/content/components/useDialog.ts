@@ -1,4 +1,4 @@
-// import { analyticsProxyClient } from '@/analytics/sdk';
+
 import { computed, ref, nextTick } from 'vue';
 
 interface DialogProp {
@@ -24,8 +24,6 @@ function updateActiveDialog() {
  * @param pid
  */
 const open = (tid: string, pid: string): void => {
-
-  // void analyticsProxyClient.reportActive();
 
 
   DialogProps.value.push({
