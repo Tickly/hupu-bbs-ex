@@ -13,30 +13,58 @@ import { DialogProps, open } from './components/useDialog';
 const lightThreadList = ref<Reply[]>([]);
 
 /**
- * 在每个回复下面生成按钮
+ * 在每个回复下面生成按钮 (纯原生 JS 重写，无 jQuery)
  */
-const generateButtons = ($: typeof import('jquery')) => (tid: string) => {
-  // 这里默认取第一个
-  const $lightContainer = $('.wrapper-container').eq(0);
+const generateButtons = (tid: string) => {
+  // 默认取第一个 .wrapper-container
+  const $lightContainer = document.querySelector('.wrapper-container');
 
-  console.log(123, $lightContainer);
+  if (!$lightContainer) return;
 
-  const list = $lightContainer.find('.post-reply-list-wrapper');
+  // 查询所有回帖容器
+  const replyWrappers = $lightContainer.querySelectorAll('.post-reply-list-wrapper');
 
-  list.each((i, el) => {
+  replyWrappers.forEach(el => {
+    // 找到 .bbs-admin-reply-post-container
+    const adminEl = el.querySelector('.bbs-admin-reply-post-container');
+    if (!adminEl) return;
 
-    const $admin = $(el).find('.bbs-admin-reply-post-container');
-    const admininfo = $admin.data('admininfo');
-    // 取到回帖的id
+    // 从 data-admininfo 属性获取信息
+    let admininfo: any = null;
+    const admininfoRaw = adminEl.getAttribute('data-admininfo');
+    try {
+      admininfo = admininfoRaw && JSON.parse(admininfoRaw);
+    } catch (e) {
+      // 非合法 JSON 可能是 object: 转化为 object 兼容
+      if (adminEl instanceof HTMLElement && (admininfoRaw === null || admininfoRaw === undefined)) {
+        // 尝试从 dataset 上拿
+        // @ts-ignore
+        if (adminEl.dataset && adminEl.dataset.admininfo) {
+          try {
+            admininfo = JSON.parse(adminEl.dataset.admininfo);
+          } catch {}
+        }
+      }
+    }
+
+    // 兼容直接 dom.dataset.admininfo 为 object 的情况
+    if (typeof admininfo !== 'object' || !admininfo?.pid) {
+      // 兼容如果页面是直接 js 写入对象属性
+      // @ts-ignore
+      if ((adminEl as any).data && (adminEl as any).data.admininfo) {
+        admininfo = (adminEl as any).data.admininfo;
+      } else {
+        return;
+      }
+    }
     const { pid } = admininfo;
 
-    // 从接口拿数据
+    // 从接口查数据
     const reply = lightThreadList.value.find(t => t.pid === pid);
-    // 找不到啥也不干
     if (!reply) return;
-    // 没有评论啥也不干
     if (!reply.check_reply_info) return;
 
+    // 构造按钮
     const btnEl = document.createElement('div');
     btnEl.classList.add('todo-list', 'todo-list-reply-dialog');
     const span = document.createElement('span');
@@ -47,23 +75,25 @@ const generateButtons = ($: typeof import('jquery')) => (tid: string) => {
       open(tid, pid);
     });
 
-    $(el)
-      .find('.post-reply-list-operate')
-      .append(btnEl);
+    // 挂载到 .post-reply-list-operate
+    const operateEl = el.querySelector('.post-reply-list-operate');
+    if (operateEl) {
+      operateEl.appendChild(btnEl);
+    }
   });
 };
 
 onMounted(async () => {
-  const { default: $ } = await import('jquery');
-
-  // 隐藏帖子
-  // $('.post-wrapper').hide();
 
   // 帖子id
-  const [tid] = /(\d)+/.exec(location.pathname) as Array<string>;
+  const tidMatch = location.pathname.match(/(\d)+/);
+  const tid = tidMatch ? tidMatch[0] : '';
+
+  if (!tid) return;
+
   Api.getsThreadLightReplyList(tid).then(res => {
     lightThreadList.value.push(...(res.data.data.list as Reply[]));
-    generateButtons($)(tid);
+    generateButtons(tid);
   });
 });
 </script>
